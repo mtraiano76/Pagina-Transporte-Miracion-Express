@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
    });
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', async function(req, res, next) {
 
   //console.log(req.body)
 
@@ -22,7 +22,7 @@ router.post('/', function(req, res, next) {
   var obj = {
     to: 'mtraiano76@gmail.com',
     subject: 'Contacto desde la pagina',
-    html: nombre + 'se contacto a traves de la web y quiere saber mas info a este correo: + email' + '<br> Su tel es: ' + tel + '. Su comentario es: ' + comentarios + '.'
+    html: nombre + 'se contacto a traves de la web y quiere saber mas info a este correo: ' + email + '<br> Su tel es: ' + tel + '. Su comentario es: ' + comentarios + '.'
 
   }
 
@@ -33,10 +33,15 @@ router.post('/', function(req, res, next) {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     }
-  });
+  })
+
+  var info = await transport.sendMail(obj);
+
+  res.render('contacto',{
+    message: 'Mensaje enviado correctamente'
+  })
 
 
 })
-
 
 module.exports = router;
